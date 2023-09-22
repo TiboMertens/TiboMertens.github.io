@@ -28,7 +28,6 @@ recognition.onresult = function (event) {
 
   if (recognizedSpeech.trim().toLowerCase() === "play") {
     // Play the audio
-    console.log("Playing audio");
     audioPlayer.play();
   }
 };
