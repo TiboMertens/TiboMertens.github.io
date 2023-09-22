@@ -1,67 +1,34 @@
-import { HfInference } from "https://cdn.jsdelivr.net/npm/@huggingface/inference@2.6.1/+esm";
+// Initialize the HTML audio element for playing audio
+const audioPlayer = document.querySelector("#audioPlayer");
 
-// insert huggingface token here (don't publish this to github)
-const HF_ACCESS_TOKEN = "";
-const inference = new HfInference(HF_ACCESS_TOKEN);
-
-const audio = document.querySelector("#audio");
-
-// initialize Speechrecognition for webkit bowsers, prefix
+// Initialize SpeechRecognition for webkit browsers, prefix
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
 const SpeechGrammarList =
   window.SpeechGrammarList || window.webkitSpeechGrammarList;
-const SpeechRecognitionEvent =
-  window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
 
-// grammer -> these are all commands you can say, feel free to change
-const commands = ["start", "stop"];
-const grammar = `#JSGF V1.0; grammar commands; public <command> = ${commands.join(
-  " | "
-)};`;
+// Grammar - the "play" command
+const grammar = `#JSGF V1.0; grammar commands; public <command> = play;`;
 
-document.querySelector("#loading").style.display = "none";
-
-// just speech recognition settings, standard MDN documentation stuff
+// Speech recognition settings
 const recognition = new SpeechRecognition();
 const speechRecognitionList = new SpeechGrammarList();
 speechRecognitionList.addFromString(grammar, 1);
 recognition.grammars = speechRecognitionList;
 recognition.continuous = true;
-recognition.lang = "nl-NL";
-recognition.interimResults = false;
+recognition.lang = "en-US"; // Change the language code if needed
 
-// start listinging
+// Start listening
 recognition.start();
 
-// on result, log result
+// On result, handle the recognized speech
 recognition.onresult = function (event) {
-  // log the word
+  // Get the last recognized speech
   let recognizedSpeech = event.results[event.results.length - 1][0].transcript;
 
-  if (recognizedSpeech === "") return;
-
-  // trim word and lowercase
-  recognizedSpeech = recognizedSpeech.trim().toLowerCase();
-
-  // update DOM
-  document.querySelector("#commando").innerHTML = recognizedSpeech;
+  if (recognizedSpeech.trim().toLowerCase() === "play") {
+    // Play the audio
+    console.log("Playing audio");
+    audioPlayer.play();
+  }
 };
-
-// the function that makes images
-const makeImage = async (prompt) => {
-  // showLoading();
-  let result = await inference.textToImage({
-    inputs: `${prompt}`,
-    model: "stabilityai/stable-diffusion-2",
-    parameters: {
-      negative_prompt: "blurry"
-    }
-  });
-  document.querySelector("#hf").src = URL.createObjectURL(result);
-  // hideLoading();
-};
-
-makeImage(
-  "foto van een laptop geschilderd door Vincent Van Gogh, laptop in de voorgrond, met een hond erop, in een bos, met een zonsondergang"
-);
