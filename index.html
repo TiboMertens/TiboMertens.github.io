@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/index.js" type="module"></script>
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
+    <script defer src="index.js" type="module"></script>
+    <title>FE!N</title>
   </head>
   <body>
-    <div id="loading"></div>
-
-    <div class="full"><img id="hf" src="" alt="" /></div>
-
     <div id="player">
-      <h1 id="commando">Spreken maar</h1>
+      <h1 id="commando">Zeg "play"</h1>
+      <!-- HTML audio element to play FE!N.mp3 -->
+      <audio id="audioPlayer" controls>
+        <source src="jay-z-ai.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
     </div>
   </body>
 </html>
